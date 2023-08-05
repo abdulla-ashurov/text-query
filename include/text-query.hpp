@@ -16,9 +16,7 @@ Tasks:
 #ifndef __TEXT_QUERY_HPP__
 #define __TEXT_QUERY_HPP__
 
-#include <iostream>
 #include <fstream>
-#include <vector>
 
 class TextQuery {
 private:
