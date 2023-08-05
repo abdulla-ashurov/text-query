@@ -23,8 +23,8 @@ Tasks:
 class TextQuery {
 private:
     std::vector<std::string> lines;
-public:
-    void read_file(const std::string &&path) {
+
+    void read_file(const std::string &path) {
         std::ifstream in(path);
         if (!in.is_open())
             throw std::runtime_error("Couldn't open file: " + path);
@@ -38,22 +38,10 @@ public:
         
         in.close();
     }
-    
-    std::vector<size_t> query(const std::string &&word) const {
-        std::vector<size_t> lines_number;
-        for (size_t i = 0; i < lines.size(); i++)
-            if (lines[i].find(word) != std::string::npos)
-                lines_number.push_back(i);
-        
-        return lines_number;
-    }
 
-    void print(std::vector<size_t> &lines_number) const {
-        std::cout << "line occurs: " << lines_number.size() << " times\n";
-        for (size_t i = 0; i < lines_number.size(); i++) {
-            std::cout << "\t(line " << lines_number[i] << ") "
-                      << lines[lines_number[i]] << std::endl;
-        }
+public:
+    explicit TextQuery(const std::string &path) {
+        read_file(path);
     }
 };
 
