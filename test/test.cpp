@@ -7,45 +7,52 @@
 ////////////////////////////////////////////////////////////////
 
 TEST_CASE("Test Query class") {
+    TextQuery text_query("test/payloads/input.txt");
     SECTION("Test word query") {
         Query query("lorem");
-        query.run();
+        std::vector<size_t> expected_lines = {5, 8};
 
-        // expected result assert
+        std::vector<size_t> lines = query.run(text_query);
+        REQUIRE(lines == expected_lines);
     }
 
     SECTION("Test not word query") {
         Query query = ~Query("lorem");
-        query.run();
+        std::vector<size_t> expected_lines = {1, 2, 3, 4, 6, 7, 9};
 
-        // expected result assert
+        std::vector<size_t> lines = query.run(text_query);
+        REQUIRE(lines == expected_lines);
     }
 
     SECTION("Test OR query") {
         Query query = Query("lorem") | Query("ipsum");
-        query.run();
+        std::vector<size_t> expected_lines = {5, 8, 0, 7};
 
-        // expected result assert
+        std::vector<size_t> lines = query.run(text_query);
+        REQUIRE(lines == expected_lines);
     }
 
     SECTION("Test AND query") {
-        Query query = Query("lorem") & Query("ipsum");
-        query.run();
+        Query query = Query("ipsum") & Query("amet");
+        std::vector<size_t> expected_lines = {0, 7};
 
-        // expected result assert
+        std::vector<size_t> lines = query.run(text_query);
+        REQUIRE(lines == expected_lines);
     }
 
     SECTION("Test AND & OR queries") {
-        Query query = Query("lorem") & (Query("xyz") | Query("zyx"));
-        query.run();
+        Query query = Query("amet") & (Query("lorem") | Query("ipsum"));
+        std::vector<size_t> expected_lines = {0, 7};
 
-        // expected result assert
+        std::vector<size_t> lines = query.run(text_query);
+        REQUIRE(lines == expected_lines);
     }
 
     SECTION("Test AND & OR queries") {
-        Query query = (Query("lorem") & (Query("xyz"))) | Query("zyx");
-        query.run();
+        Query query = (Query("ipsum") & (Query("amet"))) | Query("sit");
+        std::vector<size_t> expected_lines = {0, 7};
 
-        // expected result assert
+        std::vector<size_t> lines = query.run(text_query);
+        REQUIRE(lines == expected_lines);
     }
 }
