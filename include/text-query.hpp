@@ -41,6 +41,10 @@ public:
     explicit TextQuery(const std::string &path) {
         read_file(path);
     }
+
+    const std::vector<std::string>& get_lines() const {
+        return lines;
+    }
 };
 
 #endif
