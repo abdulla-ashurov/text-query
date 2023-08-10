@@ -10,42 +10,6 @@ public:
     virtual ~BaseQuery() {};
 };
 
-class WordQuery;
-class NotWordQuery;
-class OrWordQuery;
-class AndWordQuery;
-
-class Query {
-private:
-    std::shared_ptr<BaseQuery> base;
-    std::string word;
-
-    explicit Query(const std::shared_ptr<BaseQuery> &base) : base(base) {}
-public:
-    explicit Query(const std::string &word)
-        : word(word), base(new WordQuery(word)) {}
-
-    std::vector<size_t> run(const TextQuery &file) const {
-        return base->run(file);
-    }
-
-    friend Query operator~(const Query &query);
-    friend Query operator|(const Query &left_query, const Query &right_query);
-    friend Query operator&(const Query &left_query, const Query &right_query);
-};
-
-inline Query operator~(const Query &query) {
-    return Query(std::shared_ptr<BaseQuery>(new NotWordQuery(query)));
-}
-
-inline Query operator|(const Query &left_query, const Query &right_query) {
-    return Query(std::shared_ptr<BaseQuery>(new OrWordQuery(left_query, right_query)));
-}
-
-inline Query operator&(const Query &left_query, const Query &right_query) {
-    return Query(std::shared_ptr<BaseQuery>(new AndWordQuery(left_query, right_query)));
-}
-
 class WordQuery : public BaseQuery {
 private:
     std::string query_word;
@@ -65,6 +29,25 @@ public:
 
         return lines_number;
     }
+};
+
+class Query {
+private:
+    std::shared_ptr<BaseQuery> base;
+    std::string word;
+
+    explicit Query(const std::shared_ptr<BaseQuery> &base) : base(base) {}
+public:
+    explicit Query(const std::string &word)
+        : word(word), base(new WordQuery(word)) {}
+
+    std::vector<size_t> run(const TextQuery &file) const {
+        return base->run(file);
+    }
+
+    friend Query operator~(const Query &query);
+    friend Query operator|(const Query &left_query, const Query &right_query);
+    friend Query operator&(const Query &left_query, const Query &right_query);
 };
 
 class NotWordQuery : public BaseQuery {
@@ -131,5 +114,17 @@ public:
         return result;
     }
 };
+
+inline Query operator~(const Query &query) {
+    return Query(std::shared_ptr<BaseQuery>(new NotWordQuery(query)));
+}
+
+inline Query operator|(const Query &left_query, const Query &right_query) {
+    return Query(std::shared_ptr<BaseQuery>(new OrWordQuery(left_query, right_query)));
+}
+
+inline Query operator&(const Query &left_query, const Query &right_query) {
+    return Query(std::shared_ptr<BaseQuery>(new AndWordQuery(left_query, right_query)));
+}
 
 #endif /* __QUERY_HPP__ */

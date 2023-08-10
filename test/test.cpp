@@ -39,19 +39,19 @@ TEST_CASE("Test Query class") {
         REQUIRE(lines == expected_lines);
     }
 
-    // SECTION("Test AND & OR queries") {
-    //     Query query = Query("amet") & (Query("lorem") | Query("ipsum"));
-    //     std::vector<size_t> expected_lines = {0, 7};
+    SECTION("Test AND & OR queries") {
+        Query query = Query("amet") & (Query("lorem") | Query("ipsum"));
+        std::vector<size_t> expected_lines = {0, 7};
 
-    //     std::vector<size_t> lines = query.run(text_query);
-    //     REQUIRE(lines == expected_lines);
-    // }
+        std::vector<size_t> lines = query.run(text_query);
+        REQUIRE(lines == expected_lines);
+    }
 
-    // SECTION("Test AND & OR queries") {
-    //     Query query = (Query("ipsum") & (Query("amet"))) | Query("sit");
-    //     std::vector<size_t> expected_lines = {0, 7};
+    SECTION("Test AND & OR queries") {
+        Query query = (Query("ipsum") & (Query("amet"))) | Query("sit");
+        std::vector<size_t> expected_lines = {0, 7, 0, 7, 9};
 
-    //     std::vector<size_t> lines = query.run(text_query);
-    //     REQUIRE(lines == expected_lines);
-    // }
+        std::vector<size_t> lines = query.run(text_query);
+        REQUIRE(lines == expected_lines);
+    }
 }
