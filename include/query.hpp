@@ -2,6 +2,7 @@
 #define __QUERY_HPP__
 
 #include <vector>
+#include <memory>
 #include "text-query.hpp"
 
 class BaseQuery {
@@ -116,15 +117,15 @@ public:
 };
 
 inline Query operator~(const Query &query) {
-    return Query(std::shared_ptr<BaseQuery>(new NotWordQuery(query)));
+    return Query(std::shared_ptr<BaseQuery>(std::make_shared<NotWordQuery>(query)));
 }
 
 inline Query operator|(const Query &left_query, const Query &right_query) {
-    return Query(std::shared_ptr<BaseQuery>(new OrWordQuery(left_query, right_query)));
+    return Query(std::shared_ptr<BaseQuery>(std::make_shared<OrWordQuery>(left_query, right_query)));
 }
 
 inline Query operator&(const Query &left_query, const Query &right_query) {
-    return Query(std::shared_ptr<BaseQuery>(new AndWordQuery(left_query, right_query)));
+    return Query(std::shared_ptr<BaseQuery>(std::make_shared<AndWordQuery>(left_query, right_query)));
 }
 
 #endif /* __QUERY_HPP__ */
